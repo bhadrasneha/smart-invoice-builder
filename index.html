@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ProInvoice - Smart Invoice Builder</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+
+<body>
+    <header>ProInvoice - Smart Invoice Builder</header>
+
+    <div class="container">
+        <div class="info-row">
+            <input type="text" id="fromCompany" placeholder="From (Your Company)">
+            <input type="text" id="toCompany" placeholder="To (Client Company)">
+        </div>
+
+        <div class="info-row">
+            <input type="text" id="upiLink" placeholder="UPI/Payment Link">
+            <input type="file" id="logoUpload" accept="image/*">
+        </div>
+
+        <div class="input-row">
+            <input type="text" id="desc" placeholder="Item Description">
+            <input type="number" id="qty" placeholder="Quantity">
+            <input type="number" id="rate" placeholder="Rate">
+        </div>
+        <button class="button" onclick="addItem()">Add Item</button>
+
+        <table id="invoiceTable">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Qty</th>
+                    <th>Rate</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <div class="summary">
+            <p>Subtotal: $<span id="subtotal">0.00</span></p>
+            <p>Tax (CGST 9% + SGST 9%): $<span id="tax">0.00</span></p>
+            <p>Discount (5%): -$<span id="discount">0.00</span></p>
+            <p><strong>Grand Total: $<span id="total">0.00</span></strong></p>
+        </div>
+
+        <button class="gbutton" onclick="generatePreview()">Generate Invoice Preview</button>
+        <button class="gbutton" onclick="generatePDF()">Download as PDF</button>
+
+        <div id="previewArea" class="preview-container" style="display:none">
+            <div class="invoice-preview" id="invoiceContent">
+                <div class="invoice-header">
+                    <div>
+                        <h1 class="invoice-title">INVOICE</h1>
+                        <div class="invoice-meta">
+                            <p><strong>Invoice #:</strong> 001</p>
+                            <p><strong>Date:</strong> <span id="invDate"></span></p>
+                        </div>
+                    </div>
+                    <div>
+                        <img id="previewLogo" class="invoice-logo" style="display: none; max-height: 80px;" />
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="title">From:</div>
+                    <p id="previewFrom"></p>
+                </div>
+                <div class="section">
+                    <div class="title">To:</div>
+                    <p id="previewTo"></p>
+                </div>
+
+                <div class="section">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Qty</th>
+                                <th>Rate</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="previewItems"></tbody>
+                    </table>
+                </div>
+
+                <div class="section">
+                    <table class="summary-table">
+                        <tr>
+                            <td>Subtotal</td>
+                            <td>$<span id="pSubtotal"></span></td>
+                        </tr>
+                        <tr>
+                            <td>CGST (9%)</td>
+                            <td>$<span id="pCGST"></span></td>
+                        </tr>
+                        <tr>
+                            <td>SGST (9%)</td>
+                            <td>$<span id="pSGST"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Discount (5%)</td>
+                            <td>-$<span id="pDiscount"></span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total</strong></td>
+                            <td><strong>$<span id="pTotal"></span></strong></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="section">
+                    <div class="title">Scan to Pay:</div>
+                    <canvas id="qrCanvas"></canvas>
+                </div>
+
+                <div class="section">
+                    <div class="title">Signature</div>
+                    <p style="margin-top: 60px;">______________________________</p>
+                    <p class="label">Authorized Signature</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
